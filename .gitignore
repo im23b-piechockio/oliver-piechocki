@@ -1,0 +1,18 @@
+node_modules
+.next
+out
+public/manifest.json
+public/certificates
+public/photos
+public/projects
+scratch-shots
+npm-debug.log*
+.DS_Store
+
+.vercel
+.env*
+
+# Local-only files (school notes, raw brief)
+Cheatsheet_LB1_Modul223.md
+LB1_Lernskript_Detailliert.md
+portfokli.txt

@@ -1,0 +1,27 @@
+{
+  "name": "oliver-piechocki-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "assets": "node scripts/generate-manifest.mjs",
+    "dev": "npm run assets && next dev",
+    "build": "npm run assets && next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "framer-motion": "^11.3.0",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "agentation": "^3.0.2",
+    "autoprefixer": "^10.4.19",
+    "pdfjs-dist": "^4.5.136",
+    "playwright": "^1.61.1",
+    "postcss": "^8.4.40",
+    "sharp": "^0.33.4",
+    "tailwindcss": "^3.4.7"
+  }
+}
