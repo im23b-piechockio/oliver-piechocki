@@ -19,7 +19,7 @@ function Field({ label, children }) {
 const inputClass =
   "w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-steel/50 outline-none focus:border-white/30 focus:bg-white/[0.05] transition-colors";
 
-const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
 
 export default function Contact() {
   const { profile, ui } = useContent();
@@ -41,8 +41,8 @@ export default function Contact() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // No backend key configured yet -> open the user's mail app.
-    if (!WEB3FORMS_KEY) {
+    // No backend endpoint configured yet -> open the user's mail app.
+    if (!FORMSPREE_ENDPOINT) {
       openMailto();
       setStatus("mailto");
       return;
@@ -50,20 +50,17 @@ export default function Contact() {
 
     setStatus("sending");
     try {
-      // FormData avoids a CORS preflight (simple request), unlike a JSON body.
       const fd = new FormData();
-      fd.append("access_key", WEB3FORMS_KEY);
-      fd.append("subject", `Portfolio contact — ${form.name}`);
-      fd.append("from_name", form.name);
       fd.append("name", form.name);
       fd.append("email", form.email);
       fd.append("message", form.message);
-      const res = await fetch("https://api.web3forms.com/submit", {
+      fd.append("_subject", `Portfolio contact — ${form.name}`);
+      const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
+        headers: { Accept: "application/json" },
         body: fd,
       });
-      const data = await res.json();
-      if (data.success) {
+      if (res.ok) {
         setStatus("success");
         setForm({ name: "", email: "", message: "" });
       } else {
