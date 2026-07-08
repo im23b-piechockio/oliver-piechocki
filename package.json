@@ -12,8 +12,9 @@
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
+    "eslint-config-next": "^15.5.20",
     "framer-motion": "^11.3.0",
-    "next": "^14.2.35",
+    "next": "^15.5.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -22,8 +23,11 @@
     "autoprefixer": "^10.4.19",
     "pdfjs-dist": "^4.5.136",
     "playwright": "^1.61.1",
-    "postcss": "^8.4.40",
+    "postcss": "^8.5.10",
     "sharp": "^0.33.4",
     "tailwindcss": "^3.4.7"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
   }
 }
