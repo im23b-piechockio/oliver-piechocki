@@ -6,6 +6,7 @@ import { AgentationProvider } from "../components/AgentationProvider";
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata = {
+  metadataBase: new URL("https://oliver-piechocki.vercel.app"),
   title: `${profile.name}, ${profile.role}`,
   description: profile.summary,
   authors: [{ name: profile.name }],
@@ -15,6 +16,11 @@ export const metadata = {
     description: profile.summary,
     siteName: profile.name,
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${profile.name}, ${profile.role}`,
+    description: profile.summary,
   },
 };
 
