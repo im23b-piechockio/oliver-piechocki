@@ -32,6 +32,16 @@ export default function Footer() {
               <Icon name="linkedin" className="w-4 h-4" /> LinkedIn
             </a>
           )}
+          {profile.github && (
+            <a
+              href={profile.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors inline-flex items-center gap-2"
+            >
+              <Icon name="github" className="w-4 h-4" /> GitHub
+            </a>
+          )}
         </div>
         <div className="text-steel/70">
           © {new Date().getFullYear()} {profile.name}
