@@ -1,0 +1,160 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { SectionHeader } from "./Section";
+import { Reveal } from "./Reveal";
+import { Icon } from "./Icons";
+import { profile } from "../lib/content";
+
+function Field({ label, children }) {
+  return (
+    <label className="block">
+      <span className="text-xs uppercase tracking-widest text-steel">{label}</span>
+      <div className="mt-2">{children}</div>
+    </label>
+  );
+}
+
+const inputClass =
+  "w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-steel/50 outline-none focus:border-white/30 focus:bg-white/[0.05] transition-colors";
+
+export default function Contact() {
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [sent, setSent] = useState(false);
+
+  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(`Portfolio contact, ${form.name}`);
+    const body = encodeURIComponent(
+      `${form.message}\n\n${form.name}\n${form.email}`
+    );
+    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+    setSent(true);
+  };
+
+  return (
+    <section id="contact" className="relative py-28 px-5">
+      <div className="mx-auto max-w-6xl">
+        <SectionHeader
+          eyebrow="Contact"
+          title="Let's talk"
+          sub="Open to apprenticeships, internships and opportunities in IT and business. Reach out, I usually reply quickly."
+        />
+
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10">
+          {/* Direct contact */}
+          <div className="space-y-4">
+            <Reveal>
+              <a
+                href={`mailto:${profile.email}`}
+                className="flex items-center gap-4 glass rounded-2xl p-5 card-glow group"
+              >
+                <span className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-silver group-hover:text-white transition-colors">
+                  <Icon name="mail" className="w-5 h-5" />
+                </span>
+                <span>
+                  <span className="block text-xs uppercase tracking-widest text-steel">
+                    Email
+                  </span>
+                  <span className="block text-white">{profile.email}</span>
+                </span>
+              </a>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <a
+                href={`tel:${profile.phone.replace(/\s+/g, "")}`}
+                className="flex items-center gap-4 glass rounded-2xl p-5 card-glow group"
+              >
+                <span className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-silver group-hover:text-white transition-colors">
+                  <Icon name="phone" className="w-5 h-5" />
+                </span>
+                <span>
+                  <span className="block text-xs uppercase tracking-widest text-steel">
+                    Call
+                  </span>
+                  <span className="block text-white">{profile.phone}</span>
+                </span>
+              </a>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <div className="flex items-center gap-4 glass rounded-2xl p-5">
+                <span className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-silver">
+                  <Icon name="pin" className="w-5 h-5" />
+                </span>
+                <span>
+                  <span className="block text-xs uppercase tracking-widest text-steel">
+                    Location
+                  </span>
+                  <span className="block text-white">{profile.location}</span>
+                </span>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Form */}
+          <Reveal delay={0.1}>
+            <form
+              onSubmit={onSubmit}
+              className="glass rounded-2xl p-7 space-y-5"
+            >
+              <div className="grid sm:grid-cols-2 gap-5">
+                <Field label="Name">
+                  <input
+                    required
+                    value={form.name}
+                    onChange={update("name")}
+                    placeholder="Your name"
+                    className={inputClass}
+                  />
+                </Field>
+                <Field label="Email">
+                  <input
+                    required
+                    type="email"
+                    value={form.email}
+                    onChange={update("email")}
+                    placeholder="you@example.com"
+                    className={inputClass}
+                  />
+                </Field>
+              </div>
+              <Field label="Message">
+                <textarea
+                  required
+                  rows={5}
+                  value={form.message}
+                  onChange={update("message")}
+                  placeholder="Tell me a little about the opportunity…"
+                  className={inputClass + " resize-none"}
+                />
+              </Field>
+              <div className="flex items-center gap-4">
+                <motion.button
+                  type="submit"
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 bg-white text-ink font-medium px-6 py-3 rounded-full hover:bg-silver transition-colors"
+                >
+                  Send message
+                  <Icon name="arrow" className="w-4 h-4" />
+                </motion.button>
+                {sent && (
+                  <motion.span
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="inline-flex items-center gap-1.5 text-sm text-emerald-400"
+                  >
+                    <Icon name="check" className="w-4 h-4" />
+                    Opening your mail app…
+                  </motion.span>
+                )}
+              </div>
+            </form>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
