@@ -53,3 +53,5 @@ node scripts/validate.mjs     # content + console-error checks, screenshots
 
 Hero → About → Skills → Journey → Certificates → Contact (form + call/email
 links) → Footer, with scroll-progress bar and reveal-on-scroll animations.
+
+_Auto-deploy test: connected to GitHub via Vercel._
