@@ -1,0 +1,6 @@
+scratch-shots
+scripts/validate.mjs
+scripts/shots.mjs
+scripts/check-agentation.mjs
+.next
+node_modules
