@@ -30,9 +30,35 @@ export const metadata = {
   },
 };
 
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  jobTitle: profile.role,
+  url: "https://oliver-piechocki.vercel.app",
+  email: `mailto:${profile.email}`,
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "Kanton Zürich",
+    addressCountry: "CH",
+  },
+  alumniOf: {
+    "@type": "EducationalOrganization",
+    name: "KSH Hottingen",
+  },
+  knowsAbout: ["Information Technology", "Business", "Economics", "Finance"],
+  sameAs: [profile.linkedin, profile.github],
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+      </head>
       <body>
         <Intro />
         <CustomCursor />
