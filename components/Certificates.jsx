@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
 import { Stagger, itemVariants } from "./Reveal";
 import { Icon } from "./Icons";
+import { useContent } from "../lib/LanguageProvider";
 
 // Shown when the drop-folder is empty so the section never looks broken.
 const placeholders = [
@@ -12,7 +13,7 @@ const placeholders = [
   { title: "Certificate (Placeholder)", type: "pdf" },
 ];
 
-function Card({ item, placeholder }) {
+function Card({ item, placeholder, cert }) {
   const body = (
     <>
       <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-panel to-ink flex items-center justify-center">
@@ -29,7 +30,7 @@ function Card({ item, placeholder }) {
               <Icon name="doc" className="w-7 h-7" />
             </div>
             <div className="mt-3 text-[11px] uppercase tracking-widest text-steel">
-              {placeholder ? "Awaiting upload" : "PDF Document"}
+              {placeholder ? cert.awaiting : cert.pdf}
             </div>
           </div>
         )}
@@ -41,7 +42,7 @@ function Card({ item, placeholder }) {
             {item.title}
           </h3>
           <p className="text-xs text-steel mt-0.5 uppercase tracking-wider">
-            {item.type === "image" ? "Image" : "Document"}
+            {item.type === "image" ? cert.image : cert.document}
           </p>
         </div>
         {!placeholder && (
@@ -67,6 +68,8 @@ function Card({ item, placeholder }) {
 }
 
 export default function Certificates({ certificates = [] }) {
+  const { ui } = useContent();
+  const s = ui.sections.certificates;
   const empty = certificates.length === 0;
   const items = empty ? placeholders : certificates;
 
@@ -74,17 +77,13 @@ export default function Certificates({ certificates = [] }) {
     <section id="certificates" className="relative py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          eyebrow="Credentials"
-          title="Diplomas & certificates"
-          sub={
-            empty
-              ? "Placeholders shown below. Drop PDFs into content/certificates and they appear here automatically on the next build."
-              : "Official documents, click any card to open the full PDF."
-          }
+          eyebrow={s.eyebrow}
+          title={s.title}
+          sub={empty ? s.subEmpty : s.subFilled}
         />
         <Stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {items.map((item, i) => (
-            <Card key={i} item={item} placeholder={empty} />
+            <Card key={i} item={item} placeholder={empty} cert={ui.cert} />
           ))}
         </Stagger>
       </div>

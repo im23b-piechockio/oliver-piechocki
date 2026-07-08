@@ -1,7 +1,10 @@
-import { profile } from "../lib/content";
+"use client";
+
+import { useContent } from "../lib/LanguageProvider";
 import { Icon } from "./Icons";
 
 export default function Footer() {
+  const { profile, ui } = useContent();
   return (
     <footer className="border-t border-line py-10 px-5">
       <div className="mx-auto max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-steel">
@@ -14,13 +17,13 @@ export default function Footer() {
             href={`mailto:${profile.email}`}
             className="hover:text-white transition-colors inline-flex items-center gap-2"
           >
-            <Icon name="mail" className="w-4 h-4" /> Email
+            <Icon name="mail" className="w-4 h-4" /> {ui.contactUi.email}
           </a>
           <a
             href={`tel:${profile.phone.replace(/\s+/g, "")}`}
             className="hover:text-white transition-colors inline-flex items-center gap-2"
           >
-            <Icon name="phone" className="w-4 h-4" /> Call
+            <Icon name="phone" className="w-4 h-4" /> {ui.contactUi.call}
           </a>
           {profile.linkedin && (
             <a

@@ -2,21 +2,42 @@
 
 import { useEffect, useState } from "react";
 import { motion, useScroll, useSpring } from "framer-motion";
-import { profile } from "../lib/content";
+import { useContent, useLang } from "../lib/LanguageProvider";
 
-const links = [
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
-  { href: "#journey", label: "Journey" },
-  { href: "#projects", label: "Projects" },
-  { href: "#certificates", label: "Certificates" },
-  { href: "#contact", label: "Contact" },
+const linkDefs = [
+  { href: "#about", key: "about" },
+  { href: "#skills", key: "skills" },
+  { href: "#journey", key: "journey" },
+  { href: "#projects", key: "projects" },
+  { href: "#certificates", key: "certificates" },
+  { href: "#contact", key: "contact" },
 ];
+
+function LangToggle({ className = "" }) {
+  const { lang, setLang } = useLang();
+  return (
+    <div className={`inline-flex items-center rounded-full glass p-0.5 text-xs ${className}`}>
+      {["en", "de"].map((l) => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          className={`px-2.5 py-1 rounded-full transition-colors ${
+            lang === l ? "bg-white text-ink font-medium" : "text-steel hover:text-white"
+          }`}
+          aria-label={`Switch to ${l === "en" ? "English" : "German"}`}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { scrollYProgress } = useScroll();
+  const c = useContent();
   const progress = useSpring(scrollYProgress, {
     stiffness: 120,
     damping: 30,
@@ -47,38 +68,44 @@ export default function Nav() {
           }`}
           style={scrolled ? { maxWidth: "72rem" } : {}}
         >
-          <a href="#top" className="font-semibold tracking-tight text-white">
-            {profile.firstName}
+          <a href="/#top" className="font-semibold tracking-tight text-white">
+            {c.profile.firstName}
             <span className="text-steel">.</span>
           </a>
           <div className="hidden md:flex items-center gap-7 text-sm text-steel">
-            {links.map((l) => (
+            {linkDefs.map((l) => (
               <a
                 key={l.href}
-                href={l.href}
+                href={`/${l.href}`}
                 className="hover:text-white transition-colors duration-300"
               >
-                {l.label}
+                {c.ui.nav[l.key]}
               </a>
             ))}
           </div>
-          <a
-            href="#contact"
-            className="hidden md:inline-flex text-sm px-4 py-1.5 rounded-full bg-white text-ink font-medium hover:bg-silver transition-colors"
-          >
-            Get in touch
-          </a>
-          <button
-            className="md:hidden text-steel hover:text-white"
-            onClick={() => setOpen((o) => !o)}
-            aria-label="Toggle menu"
-          >
-            <div className="space-y-1.5">
-              <span className="block w-6 h-px bg-current" />
-              <span className="block w-6 h-px bg-current" />
-              <span className="block w-4 h-px bg-current" />
-            </div>
-          </button>
+          <div className="hidden md:flex items-center gap-3">
+            <LangToggle />
+            <a
+              href="/#contact"
+              className="inline-flex text-sm px-4 py-1.5 rounded-full bg-white text-ink font-medium hover:bg-silver transition-colors"
+            >
+              {c.ui.getInTouch}
+            </a>
+          </div>
+          <div className="md:hidden flex items-center gap-3">
+            <LangToggle />
+            <button
+              className="text-steel hover:text-white"
+              onClick={() => setOpen((o) => !o)}
+              aria-label="Toggle menu"
+            >
+              <div className="space-y-1.5">
+                <span className="block w-6 h-px bg-current" />
+                <span className="block w-6 h-px bg-current" />
+                <span className="block w-4 h-px bg-current" />
+              </div>
+            </button>
+          </div>
         </nav>
 
         {open && (
@@ -88,14 +115,14 @@ export default function Nav() {
             className="md:hidden mx-auto max-w-6xl px-5 mt-2"
           >
             <div className="glass rounded-2xl p-4 flex flex-col gap-3 text-steel">
-              {links.map((l) => (
+              {linkDefs.map((l) => (
                 <a
                   key={l.href}
-                  href={l.href}
+                  href={`/${l.href}`}
                   onClick={() => setOpen(false)}
                   className="hover:text-white transition-colors"
                 >
-                  {l.label}
+                  {c.ui.nav[l.key]}
                 </a>
               ))}
             </div>

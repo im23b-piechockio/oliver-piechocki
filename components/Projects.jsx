@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
 import { Stagger, itemVariants } from "./Reveal";
 import { Icon } from "./Icons";
-import { projects } from "../lib/content";
+import { useContent } from "../lib/LanguageProvider";
 
 function ProjectCard({ p }) {
   const inner = (
@@ -80,13 +80,14 @@ function ProjectCard({ p }) {
 }
 
 export default function Projects() {
+  const { projects, ui } = useContent();
   return (
     <section id="projects" className="relative py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          eyebrow="Work"
-          title="Projects"
-          sub="A selection of things I've built and explored, hands-on practice across IT, web and finance."
+          eyebrow={ui.sections.projects.eyebrow}
+          title={ui.sections.projects.title}
+          sub={ui.sections.projects.sub}
         />
         <Stagger className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
           {projects.map((p) => (

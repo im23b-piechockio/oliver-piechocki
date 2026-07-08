@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
 import { Reveal } from "./Reveal";
 import { Icon } from "./Icons";
-import { profile } from "../lib/content";
+import { useContent } from "../lib/LanguageProvider";
 
 function Field({ label, children }) {
   return (
@@ -20,6 +20,8 @@ const inputClass =
   "w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-steel/50 outline-none focus:border-white/30 focus:bg-white/[0.05] transition-colors";
 
 export default function Contact() {
+  const { profile, ui } = useContent();
+  const t = ui.contactUi;
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sent, setSent] = useState(false);
 
@@ -39,9 +41,9 @@ export default function Contact() {
     <section id="contact" className="relative py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          eyebrow="Contact"
-          title="Let's talk"
-          sub="Open to apprenticeships, internships and opportunities in IT and business. Reach out, I usually reply quickly."
+          eyebrow={ui.sections.contact.eyebrow}
+          title={ui.sections.contact.title}
+          sub={ui.sections.contact.sub}
         />
 
         <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-10">
@@ -57,7 +59,7 @@ export default function Contact() {
                 </span>
                 <span>
                   <span className="block text-xs uppercase tracking-widest text-steel">
-                    Email
+                    {t.email}
                   </span>
                   <span className="block text-white">{profile.email}</span>
                 </span>
@@ -73,7 +75,7 @@ export default function Contact() {
                 </span>
                 <span>
                   <span className="block text-xs uppercase tracking-widest text-steel">
-                    Call
+                    {t.call}
                   </span>
                   <span className="block text-white">{profile.phone}</span>
                 </span>
@@ -86,7 +88,7 @@ export default function Contact() {
                 </span>
                 <span>
                   <span className="block text-xs uppercase tracking-widest text-steel">
-                    Location
+                    {t.location}
                   </span>
                   <span className="block text-white">{profile.location}</span>
                 </span>
@@ -101,33 +103,33 @@ export default function Contact() {
               className="glass rounded-2xl p-7 space-y-5"
             >
               <div className="grid sm:grid-cols-2 gap-5">
-                <Field label="Name">
+                <Field label={t.name}>
                   <input
                     required
                     value={form.name}
                     onChange={update("name")}
-                    placeholder="Your name"
+                    placeholder={t.namePh}
                     className={inputClass}
                   />
                 </Field>
-                <Field label="Email">
+                <Field label={t.emailField}>
                   <input
                     required
                     type="email"
                     value={form.email}
                     onChange={update("email")}
-                    placeholder="you@example.com"
+                    placeholder={t.emailPh}
                     className={inputClass}
                   />
                 </Field>
               </div>
-              <Field label="Message">
+              <Field label={t.message}>
                 <textarea
                   required
                   rows={5}
                   value={form.message}
                   onChange={update("message")}
-                  placeholder="Tell me a little about the opportunity…"
+                  placeholder={t.messagePh}
                   className={inputClass + " resize-none"}
                 />
               </Field>
@@ -137,7 +139,7 @@ export default function Contact() {
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 bg-white text-ink font-medium px-6 py-3 rounded-full hover:bg-silver transition-colors"
                 >
-                  Send message
+                  {t.send}
                   <Icon name="arrow" className="w-4 h-4" />
                 </motion.button>
                 {sent && (
@@ -147,7 +149,7 @@ export default function Contact() {
                     className="inline-flex items-center gap-1.5 text-sm text-emerald-400"
                   >
                     <Icon name="check" className="w-4 h-4" />
-                    Opening your mail app…
+                    {t.sent}
                   </motion.span>
                 )}
               </div>

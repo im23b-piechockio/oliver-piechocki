@@ -3,21 +3,22 @@
 import { SectionHeader } from "./Section";
 import { Reveal, Stagger, itemVariants } from "./Reveal";
 import { motion } from "framer-motion";
-import { about, interests, profile } from "../lib/content";
+import { useContent } from "../lib/LanguageProvider";
 import { Icon } from "./Icons";
 
-const facts = [
-  { label: "Based in", value: profile.location, icon: "pin" },
-  { label: "Born", value: profile.born, icon: "spark" },
-  { label: "Focus", value: "IT · Business · Finance", icon: "chip" },
-  { label: "Status", value: "Open to opportunities", icon: "check" },
-];
-
 export default function About() {
+  const { about, interests, profile, ui, aboutLead } = useContent();
+  const facts = [
+    { label: ui.facts.basedIn, value: profile.location, icon: "pin" },
+    { label: ui.facts.born, value: profile.born, icon: "spark" },
+    { label: ui.facts.focus, value: ui.facts.focusValue, icon: "chip" },
+    { label: ui.facts.status, value: ui.facts.statusValue, icon: "check" },
+  ];
+
   return (
     <section id="about" className="relative py-28 px-5">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader eyebrow="About" title="Who I am" />
+        <SectionHeader eyebrow={ui.sections.about.eyebrow} title={ui.sections.about.title} />
 
         <div className="grid lg:grid-cols-[1.25fr_0.75fr] gap-12 lg:gap-16">
           {/* Narrative */}
@@ -27,7 +28,7 @@ export default function About() {
               <div className="relative pl-6 mb-10">
                 <span className="absolute left-0 top-1 bottom-1 w-px bg-gradient-to-b from-white/70 via-steel to-transparent" />
                 <p className="text-2xl sm:text-3xl font-medium leading-snug text-gradient">
-                  IT student. Aspiring economist. Everyday athlete.
+                  {aboutLead}
                 </p>
               </div>
             </Reveal>
@@ -64,7 +65,7 @@ export default function About() {
             <Reveal delay={0.1}>
               <div className="glass rounded-2xl p-6">
                 <h3 className="text-xs uppercase tracking-widest text-steel mb-4">
-                  Interests
+                  {ui.interestsLabel}
                 </h3>
                 <Stagger className="flex flex-wrap gap-2.5">
                   {interests.map((tag) => (

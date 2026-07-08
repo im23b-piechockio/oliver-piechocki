@@ -2,10 +2,12 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { profile, highlights } from "../lib/content";
+import { useContent } from "../lib/LanguageProvider";
 import { Icon } from "./Icons";
 
 export default function Hero({ portrait }) {
+  const c = useContent();
+  const { profile, highlights, ui } = c;
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -62,7 +64,7 @@ export default function Hero({ portrait }) {
               transition={{ duration: 0.8, delay: 0.18 }}
               className="block text-steel text-2xl sm:text-3xl lg:text-4xl mt-4 font-normal"
             >
-              {profile.role} at KSH Hottingen
+              {profile.role} {ui.atKsh}
             </motion.span>
           </h1>
 
@@ -85,7 +87,7 @@ export default function Hero({ portrait }) {
               href="#contact"
               className="group inline-flex items-center gap-2 bg-white text-ink font-medium px-6 py-3 rounded-full hover:bg-silver transition-colors"
             >
-              Get in touch
+              {ui.getInTouch}
               <Icon
                 name="arrow"
                 className="w-4 h-4 group-hover:translate-x-1 transition-transform"
@@ -95,7 +97,7 @@ export default function Hero({ portrait }) {
               href="#about"
               className="inline-flex items-center gap-2 glass px-6 py-3 rounded-full text-silver hover:text-white transition-colors"
             >
-              Explore profile
+              {ui.exploreProfile}
               <Icon name="down" className="w-4 h-4" />
             </a>
           </motion.div>
@@ -139,17 +141,17 @@ export default function Hero({ portrait }) {
                   {profile.name.split(" ")[1]?.[0]}
                 </div>
                 <p className="mt-5 text-xs text-steel tracking-wider uppercase">
-                  Portrait placeholder
+                  {ui.portraitPlaceholder}
                 </p>
                 <p className="mt-1 text-[11px] text-steel/60 px-6 text-center">
-                  Drop a photo in content/photos
+                  {ui.portraitHint}
                 </p>
               </div>
             )}
           </div>
           <div className="absolute -bottom-4 -left-4 glass rounded-2xl px-4 py-3 text-sm">
             <div className="text-white font-medium">{profile.location}</div>
-            <div className="text-steel text-xs">Born {profile.born}</div>
+            <div className="text-steel text-xs">{ui.bornPrefix} {profile.born}</div>
           </div>
         </motion.div>
       </motion.div>

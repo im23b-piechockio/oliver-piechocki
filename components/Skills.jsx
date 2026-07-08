@@ -4,16 +4,17 @@ import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
 import { Stagger, itemVariants } from "./Reveal";
 import { Icon } from "./Icons";
-import { skills } from "../lib/content";
+import { useContent } from "../lib/LanguageProvider";
 
 export default function Skills() {
+  const { skills, ui } = useContent();
   return (
     <section id="skills" className="relative py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          eyebrow="Strengths"
-          title="What I bring"
-          sub="A blend of technical curiosity, commercial thinking and the discipline of an athlete."
+          eyebrow={ui.sections.skills.eyebrow}
+          title={ui.sections.skills.title}
+          sub={ui.sections.skills.sub}
         />
         <Stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {skills.map((s) => (

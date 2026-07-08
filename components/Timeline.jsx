@@ -3,13 +3,14 @@
 import { motion } from "framer-motion";
 import { SectionHeader } from "./Section";
 import { Reveal } from "./Reveal";
-import { timeline } from "../lib/content";
+import { useContent } from "../lib/LanguageProvider";
 
 export default function Timeline() {
+  const { timeline, ui } = useContent();
   return (
     <section id="journey" className="relative py-28 px-5">
       <div className="mx-auto max-w-4xl">
-        <SectionHeader eyebrow="Journey" title="Education & path" />
+        <SectionHeader eyebrow={ui.sections.journey.eyebrow} title={ui.sections.journey.title} />
         <div className="relative">
           <div className="absolute left-[7px] sm:left-1/2 top-0 bottom-0 w-px bg-line" />
           <div className="space-y-12">
