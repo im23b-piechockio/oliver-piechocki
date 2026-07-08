@@ -67,10 +67,14 @@ export default function Contact() {
         setStatus("success");
         setForm({ name: "", email: "", message: "" });
       } else {
-        setStatus("error");
+        // Backend reachable but rejected -> fall back to mail app.
+        openMailto();
+        setStatus("mailto");
       }
     } catch {
-      setStatus("error");
+      // Network/CORS failure -> fall back to mail app so it's never a dead end.
+      openMailto();
+      setStatus("mailto");
     }
   };
 
