@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { profile } from "../lib/content";
 import { AgentationProvider } from "../components/AgentationProvider";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
       <body>
         {children}
         <Analytics />
+        <SpeedInsights />
         {process.env.NODE_ENV === "development" && <AgentationProvider />}
       </body>
     </html>
