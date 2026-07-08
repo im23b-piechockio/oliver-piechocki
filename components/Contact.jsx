@@ -50,17 +50,17 @@ export default function Contact() {
 
     setStatus("sending");
     try {
+      // FormData avoids a CORS preflight (simple request), unlike a JSON body.
+      const fd = new FormData();
+      fd.append("access_key", WEB3FORMS_KEY);
+      fd.append("subject", `Portfolio contact — ${form.name}`);
+      fd.append("from_name", form.name);
+      fd.append("name", form.name);
+      fd.append("email", form.email);
+      fd.append("message", form.message);
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: WEB3FORMS_KEY,
-          subject: `Portfolio contact — ${form.name}`,
-          from_name: form.name,
-          name: form.name,
-          email: form.email,
-          message: form.message,
-        }),
+        body: fd,
       });
       const data = await res.json();
       if (data.success) {
