@@ -36,6 +36,7 @@ function LangToggle({ className = "" }) {
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("");
   const { scrollYProgress } = useScroll();
   const c = useContent();
   const progress = useSpring(scrollYProgress, {
@@ -49,6 +50,25 @@ export default function Nav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Highlight the section currently crossing the viewport's middle band.
+  useEffect(() => {
+    const ids = linkDefs.map((l) => l.href.slice(1));
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+    if (!sections.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -73,15 +93,27 @@ export default function Nav() {
             <span className="text-steel">.</span>
           </a>
           <div className="hidden md:flex items-center gap-7 text-sm text-steel">
-            {linkDefs.map((l) => (
-              <a
-                key={l.href}
-                href={`/${l.href}`}
-                className="hover:text-white transition-colors duration-300"
-              >
-                {c.ui.nav[l.key]}
-              </a>
-            ))}
+            {linkDefs.map((l) => {
+              const isActive = active === l.href.slice(1);
+              return (
+                <a
+                  key={l.href}
+                  href={`/${l.href}`}
+                  className={`relative transition-colors duration-300 ${
+                    isActive ? "text-white" : "hover:text-white"
+                  }`}
+                >
+                  {c.ui.nav[l.key]}
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active"
+                      className="absolute -bottom-1.5 left-0 right-0 h-px bg-white/70"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </a>
+              );
+            })}
           </div>
           <div className="hidden md:flex items-center gap-3">
             <LangToggle />
