@@ -146,7 +146,7 @@ export default function Nav() {
             animate={{ opacity: 1, y: 0 }}
             className="md:hidden mx-auto max-w-6xl px-5 mt-2"
           >
-            <div className="glass rounded-2xl p-4 flex flex-col gap-3 text-steel">
+            <div className="rounded-2xl p-4 flex flex-col gap-3 text-steel bg-[#101015] border border-white/10 shadow-2xl">
               {linkDefs.map((l) => (
                 <a
                   key={l.href}

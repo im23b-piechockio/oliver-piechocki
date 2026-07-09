@@ -4,3 +4,4 @@ scripts/shots.mjs
 scripts/check-agentation.mjs
 .next
 node_modules
+scripts/mobile-test.mjs
