@@ -6,10 +6,10 @@ import { useContent, useLang } from "../lib/LanguageProvider";
 
 const linkDefs = [
   { href: "#about", key: "about" },
-  { href: "#skills", key: "skills" },
-  { href: "#journey", key: "journey" },
   { href: "#projects", key: "projects" },
   { href: "#certificates", key: "certificates" },
+  { href: "#skills", key: "skills" },
+  { href: "#journey", key: "journey" },
   { href: "#contact", key: "contact" },
 ];
 

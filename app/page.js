@@ -28,10 +28,10 @@ export default async function Home() {
       <Nav />
       <Hero portrait={portrait} />
       <About />
-      <Skills />
-      <Timeline />
       <Projects />
       <Certificates certificates={manifest.certificates || []} />
+      <Skills />
+      <Timeline />
       <Contact />
       <Footer />
     </main>
