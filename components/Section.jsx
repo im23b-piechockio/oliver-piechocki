@@ -3,7 +3,7 @@ import { Reveal } from "./Reveal";
 export function SectionHeader({ eyebrow, title, sub }) {
   return (
     <Reveal>
-      <div className="mb-14 max-w-2xl">
+      <div className="mb-10 md:mb-14 max-w-2xl">
         {eyebrow && (
           <div className="text-xs uppercase tracking-[0.25em] text-steel mb-4 flex items-center gap-3">
             <span className="w-8 h-px bg-steel/50" />

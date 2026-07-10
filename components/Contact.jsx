@@ -76,7 +76,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-28 px-5">
+    <section id="contact" className="relative py-20 md:py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={ui.sections.contact.eyebrow}
@@ -95,11 +95,13 @@ export default function Contact() {
                 <span className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-silver group-hover:text-white transition-colors">
                   <Icon name="mail" className="w-5 h-5" />
                 </span>
-                <span>
+                <span className="min-w-0">
                   <span className="block text-xs uppercase tracking-widest text-steel">
                     {t.email}
                   </span>
-                  <span className="block text-white">{profile.email}</span>
+                  <span className="block text-white text-sm sm:text-base break-all">
+                    {profile.email}
+                  </span>
                 </span>
               </a>
             </Reveal>

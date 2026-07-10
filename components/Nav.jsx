@@ -21,7 +21,7 @@ function LangToggle({ className = "" }) {
         <button
           key={l}
           onClick={() => setLang(l)}
-          className={`px-2.5 py-1 rounded-full transition-colors ${
+          className={`px-3 py-1.5 rounded-full transition-colors ${
             lang === l ? "bg-white text-ink font-medium" : "text-steel hover:text-white"
           }`}
           aria-label={`Switch to ${l === "en" ? "English" : "German"}`}
@@ -127,7 +127,7 @@ export default function Nav() {
           <div className="md:hidden flex items-center gap-3">
             <LangToggle />
             <button
-              className="text-steel hover:text-white"
+              className="text-steel hover:text-white w-11 h-11 flex items-center justify-center -mr-2"
               onClick={() => setOpen((o) => !o)}
               aria-label="Toggle menu"
             >

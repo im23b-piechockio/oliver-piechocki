@@ -30,6 +30,14 @@ export const metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0a0a0b",
+  colorScheme: "dark",
+};
+
 const personSchema = {
   "@context": "https://schema.org",
   "@type": "Person",

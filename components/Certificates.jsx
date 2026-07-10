@@ -74,7 +74,7 @@ export default function Certificates({ certificates = [] }) {
   const items = empty ? placeholders : certificates;
 
   return (
-    <section id="certificates" className="relative py-28 px-5">
+    <section id="certificates" className="relative py-20 md:py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={s.eyebrow}

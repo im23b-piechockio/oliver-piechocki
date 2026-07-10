@@ -21,7 +21,7 @@ export default function Hero({ portrait }) {
     <section
       id="top"
       ref={ref}
-      className="relative min-h-screen flex items-center overflow-hidden pt-28 pb-20"
+      className="relative min-h-[100svh] flex items-start md:items-center overflow-hidden pt-28 pb-16 md:pb-20"
     >
       {/* Ambient background */}
       <div className="absolute inset-0 bg-grid" />

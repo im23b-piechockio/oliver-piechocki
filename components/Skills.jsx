@@ -9,7 +9,7 @@ import { useContent } from "../lib/LanguageProvider";
 export default function Skills() {
   const { skills, ui } = useContent();
   return (
-    <section id="skills" className="relative py-28 px-5">
+    <section id="skills" className="relative py-20 md:py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={ui.sections.skills.eyebrow}

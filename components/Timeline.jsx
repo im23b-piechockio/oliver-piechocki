@@ -8,7 +8,7 @@ import { useContent } from "../lib/LanguageProvider";
 export default function Timeline() {
   const { timeline, ui } = useContent();
   return (
-    <section id="journey" className="relative py-28 px-5">
+    <section id="journey" className="relative py-20 md:py-28 px-5">
       <div className="mx-auto max-w-4xl">
         <SectionHeader eyebrow={ui.sections.journey.eyebrow} title={ui.sections.journey.title} />
         <div className="relative">

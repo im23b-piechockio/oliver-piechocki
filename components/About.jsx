@@ -16,7 +16,7 @@ export default function About() {
   ];
 
   return (
-    <section id="about" className="relative py-28 px-5">
+    <section id="about" className="relative py-20 md:py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader eyebrow={ui.sections.about.eyebrow} title={ui.sections.about.title} />
 

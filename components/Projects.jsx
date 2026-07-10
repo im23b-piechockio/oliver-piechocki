@@ -82,7 +82,7 @@ function ProjectCard({ p }) {
 export default function Projects() {
   const { projects, ui } = useContent();
   return (
-    <section id="projects" className="relative py-28 px-5">
+    <section id="projects" className="relative py-20 md:py-28 px-5">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={ui.sections.projects.eyebrow}

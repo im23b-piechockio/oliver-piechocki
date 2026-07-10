@@ -17,7 +17,11 @@ export default function ScrollToTop() {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
-      className={`fixed bottom-6 right-6 z-40 w-11 h-11 rounded-full glass flex items-center justify-center text-silver hover:text-white hover:-translate-y-0.5 transition-all duration-300 ${
+      style={{
+        bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
+        right: "calc(1.5rem + env(safe-area-inset-right))",
+      }}
+      className={`fixed z-40 w-12 h-12 rounded-full glass flex items-center justify-center text-silver hover:text-white hover:-translate-y-0.5 transition-all duration-300 ${
         show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
       }`}
     >
