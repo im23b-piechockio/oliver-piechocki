@@ -7,6 +7,7 @@ import { Icon } from "./Icons";
 import { useContent } from "../lib/LanguageProvider";
 
 function ProjectCard({ p }) {
+  const { ui } = useContent();
   const inner = (
     <>
       <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-panel to-ink">
@@ -38,14 +39,7 @@ function ProjectCard({ p }) {
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-transparent" />
       </div>
       <div className="p-6">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-lg font-medium text-white">{p.title}</h3>
-          {p.link && (
-            <span className="text-steel group-hover:text-white transition-colors mt-1">
-              <Icon name="arrow" className="w-4 h-4" />
-            </span>
-          )}
-        </div>
+        <h3 className="text-lg font-medium text-white">{p.title}</h3>
         <p className="mt-2 text-sm text-steel leading-relaxed">{p.desc}</p>
         {p.stack?.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
@@ -59,6 +53,32 @@ function ProjectCard({ p }) {
             ))}
           </div>
         )}
+        {(p.link || p.demo) && (
+          <div className="mt-5 flex flex-wrap items-center gap-2.5 text-sm">
+            {p.demo && (
+              <a
+                href={p.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 bg-white text-ink font-medium rounded-full px-3.5 py-1.5 hover:bg-silver transition-colors"
+              >
+                <Icon name="external" className="w-3.5 h-3.5" />
+                {ui.liveDemo}
+              </a>
+            )}
+            {p.link && (
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-silver hover:text-white border border-white/10 hover:border-white/25 rounded-full px-3.5 py-1.5 transition-colors"
+              >
+                <Icon name="github" className="w-4 h-4" />
+                {ui.code}
+              </a>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
@@ -68,13 +88,7 @@ function ProjectCard({ p }) {
       variants={itemVariants}
       className="group glass rounded-2xl overflow-hidden card-glow"
     >
-      {p.link ? (
-        <a href={p.link} target="_blank" rel="noopener noreferrer">
-          {inner}
-        </a>
-      ) : (
-        <div>{inner}</div>
-      )}
+      {inner}
     </motion.div>
   );
 }

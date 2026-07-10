@@ -60,6 +60,13 @@ export function Icon({ name, className = "w-6 h-6" }) {
       </>
     ),
     arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+    external: (
+      <>
+        <path d="M14 4h6v6" />
+        <path d="M20 4 11 13" />
+        <path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+      </>
+    ),
     down: <path d="M12 5v14M6 13l6 6 6-6" />,
     check: <path d="m5 12 5 5 9-11" />,
     people: (
