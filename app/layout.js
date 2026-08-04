@@ -16,7 +16,16 @@ export const metadata = {
   title: `${profile.name}, ${profile.role}`,
   description: profile.summary,
   authors: [{ name: profile.name }],
-  keywords: [profile.name, "IT Student", "Portfolio", "KSH Hottingen", "Zürich"],
+  keywords: [
+    profile.name,
+    "IMS Absolvent",
+    "Praktikum 2027",
+    "Berufsmaturität Wirtschaft",
+    "Business Analyse",
+    "Portfolio",
+    "KSH Hottingen",
+    "Zürich",
+  ],
   openGraph: {
     title: `${profile.name}, ${profile.role}`,
     description: profile.summary,

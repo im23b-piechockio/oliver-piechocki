@@ -62,9 +62,9 @@ export default function Hero({ portrait }) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.18 }}
-              className="block text-steel text-2xl sm:text-3xl lg:text-4xl mt-4 font-normal"
+              className="block text-steel text-xl sm:text-2xl lg:text-3xl mt-4 font-normal leading-snug"
             >
-              {profile.role} {ui.atKsh}
+              {profile.headline}
             </motion.span>
           </h1>
 
@@ -108,8 +108,8 @@ export default function Hero({ portrait }) {
             transition={{ duration: 1, delay: 0.6 }}
             className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-px bg-line/60 rounded-2xl overflow-hidden glass"
           >
-            {highlights.map((h) => (
-              <div key={h.label} className="bg-ink/40 p-4 text-center">
+            {highlights.map((h, i) => (
+              <div key={i} className="bg-ink/40 p-4 text-center">
                 <div className="text-xl font-semibold text-white">{h.value}</div>
                 <div className="text-[11px] uppercase tracking-wider text-steel mt-1">
                   {h.label}

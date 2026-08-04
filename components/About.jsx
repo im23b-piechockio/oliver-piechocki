@@ -55,7 +55,7 @@ export default function About() {
                       <div className="text-[11px] uppercase tracking-widest text-steel">
                         {f.label}
                       </div>
-                      <div className="text-white text-sm truncate">{f.value}</div>
+                      <div className="text-white text-sm leading-snug">{f.value}</div>
                     </div>
                   </div>
                 ))}

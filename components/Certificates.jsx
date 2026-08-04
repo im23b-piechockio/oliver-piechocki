@@ -42,7 +42,7 @@ function Card({ item, placeholder, cert }) {
             {item.title}
           </h3>
           <p className="text-xs text-steel mt-0.5 uppercase tracking-wider">
-            {item.type === "image" ? cert.image : cert.document}
+            {item.meta || (item.type === "image" ? cert.image : cert.document)}
           </p>
         </div>
         {!placeholder && (
@@ -68,7 +68,7 @@ function Card({ item, placeholder, cert }) {
 }
 
 export default function Certificates({ certificates = [] }) {
-  const { ui } = useContent();
+  const { ui, pendingCertificates = [] } = useContent();
   const s = ui.sections.certificates;
   const empty = certificates.length === 0;
   const items = empty ? placeholders : certificates;
@@ -85,6 +85,11 @@ export default function Certificates({ certificates = [] }) {
           {items.map((item, i) => (
             <Card key={i} item={item} placeholder={empty} cert={ui.cert} />
           ))}
+          {/* Documents not uploaded yet — shown so the record stays complete. */}
+          {!empty &&
+            pendingCertificates.map((item, i) => (
+              <Card key={`pending-${i}`} item={item} placeholder cert={ui.cert} />
+            ))}
         </Stagger>
       </div>
     </section>

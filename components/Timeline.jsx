@@ -16,11 +16,7 @@ export default function Timeline() {
           <div className="space-y-12">
             {timeline.map((t, i) => (
               <Reveal key={t.title} delay={i * 0.05}>
-                <div
-                  className={`relative sm:grid sm:grid-cols-2 sm:gap-10 ${
-                    i % 2 === 0 ? "" : "sm:[&>*:first-child]:col-start-2"
-                  }`}
-                >
+                <div className="relative sm:grid sm:grid-cols-2 sm:gap-10">
                   <motion.span
                     className="absolute left-0 sm:left-1/2 sm:-translate-x-1/2 top-1.5 w-3.5 h-3.5 rounded-full bg-white ring-4 ring-ink"
                     whileInView={{ scale: [0, 1.3, 1] }}
