@@ -1,11 +1,12 @@
 import { ImageResponse } from "next/og";
-import { profile } from "../lib/content";
+import { content } from "./content";
 
-export const runtime = "edge";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export default async function renderOGImage(lang) {
+  const profile = content[lang].profile;
+  return renderImage(profile);
+}
 
-export default async function OGImage() {
+async function renderImage(profile) {
   return new ImageResponse(
     (
       <div
@@ -71,7 +72,7 @@ export default async function OGImage() {
             marginTop: 18,
           }}
         >
-          {profile.role} at KSH Hottingen
+          {profile.role} · KSH Hottingen
         </div>
         <div
           style={{
@@ -98,6 +99,6 @@ export default async function OGImage() {
         </div>
       </div>
     ),
-    { ...size }
+    { width: 1200, height: 630 }
   );
 }

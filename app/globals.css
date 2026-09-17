@@ -125,3 +125,10 @@ body.has-custom-cursor * {
     scroll-behavior: auto;
   }
 }
+
+/* Without JavaScript, animated elements would stay at their hidden start state
+   (framer-motion renders opacity:0 inline). The `js` class is set in <head>. */
+html:not(.js) main [style*="opacity:0"] {
+  opacity: 1 !important;
+  transform: none !important;
+}

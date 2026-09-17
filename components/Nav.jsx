@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useContent, useLang } from "../lib/LanguageProvider";
 
 const linkDefs = [
@@ -40,11 +40,14 @@ export default function Nav() {
   const [active, setActive] = useState("");
   const { scrollYProgress } = useScroll();
   const c = useContent();
-  const progress = useSpring(scrollYProgress, {
+  const { base } = useLang();
+  const springProgress = useSpring(scrollYProgress, {
     stiffness: 120,
     damping: 30,
     mass: 0.3,
   });
+  const reduceMotion = useReducedMotion();
+  const progress = reduceMotion ? scrollYProgress : springProgress;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -89,7 +92,7 @@ export default function Nav() {
           }`}
           style={scrolled ? { maxWidth: "72rem" } : {}}
         >
-          <a href="/#top" className="font-semibold tracking-tight text-white">
+          <a href={`${base}#top`} className="font-semibold tracking-tight text-white">
             {c.profile.firstName}
             <span className="text-steel">.</span>
           </a>
@@ -99,7 +102,7 @@ export default function Nav() {
               return (
                 <a
                   key={l.href}
-                  href={`/${l.href}`}
+                  href={`${base}${l.href}`}
                   className={`relative transition-colors duration-300 ${
                     isActive ? "text-white" : "hover:text-white"
                   }`}
@@ -119,7 +122,7 @@ export default function Nav() {
           <div className="hidden lg:flex items-center gap-3">
             <LangToggle />
             <a
-              href="/#contact"
+              href={`${base}#contact`}
               className="inline-flex text-sm px-4 py-1.5 rounded-full bg-white text-ink font-medium hover:bg-silver transition-colors"
             >
               {c.ui.getInTouch}
@@ -151,7 +154,7 @@ export default function Nav() {
               {linkDefs.map((l) => (
                 <a
                   key={l.href}
-                  href={`/${l.href}`}
+                  href={`${base}${l.href}`}
                   onClick={() => setOpen(false)}
                   className="hover:text-white transition-colors"
                 >

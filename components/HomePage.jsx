@@ -1,15 +1,15 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import Nav from "../components/Nav";
-import Hero from "../components/Hero";
-import About from "../components/About";
-import Knowledge from "../components/Knowledge";
-import Skills from "../components/Skills";
-import Timeline from "../components/Timeline";
-import Projects from "../components/Projects";
-import Certificates from "../components/Certificates";
-import Contact from "../components/Contact";
-import Footer from "../components/Footer";
+import Nav from "./Nav";
+import Hero from "./Hero";
+import About from "./About";
+import Knowledge from "./Knowledge";
+import Skills from "./Skills";
+import Timeline from "./Timeline";
+import Projects from "./Projects";
+import Certificates from "./Certificates";
+import Contact from "./Contact";
+import Footer from "./Footer";
 
 async function getManifest() {
   try {
@@ -20,7 +20,7 @@ async function getManifest() {
   }
 }
 
-export default async function Home() {
+export default async function HomePage() {
   const manifest = await getManifest();
   const portrait = manifest.photos?.[0]?.file || null;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useContent } from "../lib/LanguageProvider";
 import { Icon } from "./Icons";
@@ -13,9 +13,13 @@ export default function Hero({ portrait }) {
     target: ref,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  // Parallax moves content and background; skipped when the visitor prefers reduced motion.
+  const reduceMotion = useReducedMotion();
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, 160]);
+  const parallaxScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const y = reduceMotion ? 0 : parallaxY;
+  const scale = reduceMotion ? 1 : parallaxScale;
 
   return (
     <section
@@ -162,7 +166,7 @@ export default function Hero({ portrait }) {
         transition={{ delay: 1.2 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 text-steel"
       >
-        <Icon name="down" className="w-5 h-5 animate-bounce" />
+        <Icon name="down" className="w-5 h-5 motion-safe:animate-bounce" />
       </motion.div>
     </section>
   );

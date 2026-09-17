@@ -4,53 +4,45 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { profile } from "../lib/content";
 
-// Brief intro overlay on first visit of a session.
+// Short name flash on the first visit of a session. Rendered only in the browser,
+// never blocks scrolling and ignores clicks, so the page underneath stays usable.
+// Skipped entirely when the visitor prefers reduced motion.
 export default function Intro() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     let timer;
-    const seen = sessionStorage.getItem("introSeen");
-    if (seen) {
-      setShow(false);
+    try {
+      if (sessionStorage.getItem("introSeen")) return;
+      sessionStorage.setItem("introSeen", "1");
+    } catch {
       return;
     }
-    sessionStorage.setItem("introSeen", "1");
-    document.body.style.overflow = "hidden";
-    timer = setTimeout(() => setShow(false), 1500);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    setShow(true);
+    timer = setTimeout(() => setShow(false), 250);
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (!show) document.body.style.overflow = "";
-  }, [show]);
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-[100] bg-ink flex items-center justify-center"
+          aria-hidden="true"
+          className="fixed inset-0 z-[100] bg-ink flex items-center justify-center pointer-events-none"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 12, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="text-3xl sm:text-4xl font-semibold tracking-tight text-gradient"
-            >
-              {profile.name}
-              <span className="text-steel">.</span>
-            </motion.div>
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 h-px w-40 mx-auto bg-gradient-to-r from-transparent via-steel to-transparent origin-center"
-            />
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="text-3xl sm:text-4xl font-semibold tracking-tight text-gradient"
+          >
+            {profile.name}
+            <span className="text-steel">.</span>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
