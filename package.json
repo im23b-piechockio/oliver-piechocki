@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "assets": "node scripts/generate-manifest.mjs",
+    "previews": "node scripts/certificate-previews.mjs",
     "dev": "npm run assets && next dev",
     "build": "npm run assets && next build",
     "start": "next start",

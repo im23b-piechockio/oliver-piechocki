@@ -27,6 +27,7 @@ export default async function HomePage() {
   return (
     <main className="relative">
       <Nav />
+      <div id="main-content" tabIndex={-1} className="outline-none" />
       <Hero portrait={portrait} />
       <About />
       <Knowledge />

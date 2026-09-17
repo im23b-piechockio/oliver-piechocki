@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useContent, useLang } from "../lib/LanguageProvider";
 
@@ -22,7 +22,8 @@ function LangToggle({ className = "" }) {
         <button
           key={l}
           onClick={() => setLang(l)}
-          className={`px-3 py-1.5 rounded-full transition-colors ${
+          aria-pressed={lang === l}
+          className={`px-3 py-1.5 min-w-[44px] min-h-[44px] lg:min-w-0 lg:min-h-0 rounded-full transition-colors ${
             lang === l ? "bg-white text-ink font-medium" : "text-steel hover:text-white"
           }`}
           aria-label={`Switch to ${l === "en" ? "English" : "German"}`}
@@ -38,6 +39,8 @@ export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const headerRef = useRef(null);
+  const menuButtonRef = useRef(null);
   const { scrollYProgress } = useScroll();
   const c = useContent();
   const { base } = useLang();
@@ -56,9 +59,35 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the mobile menu on Escape, a tap outside it, or scrolling.
+  useEffect(() => {
+    if (!open) return;
+    const startY = window.scrollY;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    const onPointer = (e) => {
+      if (!headerRef.current?.contains(e.target)) setOpen(false);
+    };
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - startY) > 10) setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [open]);
+
   // Highlight the section currently crossing the viewport's middle band.
   useEffect(() => {
-    const ids = linkDefs.map((l) => l.href.slice(1));
+    const ids = ["top", ...linkDefs.map((l) => l.href.slice(1))];
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter(Boolean);
@@ -66,7 +95,15 @@ export default function Nav() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) setActive(entry.target.id);
+          if (!entry.isIntersecting) return;
+          const id = entry.target.id;
+          setActive(id === "top" ? "" : id);
+          // Keep the address bar on the section in view, so a copied link shows what you see.
+          // replaceState: no history entry per section, Back still leaves the page.
+          const url = id === "top" ? location.pathname : `${location.pathname}#${id}`;
+          if (url !== location.pathname + location.hash) {
+            history.replaceState(history.state, "", url);
+          }
         });
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
@@ -82,6 +119,7 @@ export default function Nav() {
         style={{ scaleX: progress }}
       />
       <header
+        ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled ? "py-3" : "py-5"
         }`}
@@ -131,9 +169,12 @@ export default function Nav() {
           <div className="lg:hidden flex items-center gap-3">
             <LangToggle />
             <button
+              ref={menuButtonRef}
               className="text-steel hover:text-white w-11 h-11 flex items-center justify-center -mr-2"
               onClick={() => setOpen((o) => !o)}
-              aria-label="Toggle menu"
+              aria-label={c.ui.menu}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
             >
               <div className="space-y-1.5">
                 <span className="block w-6 h-px bg-current" />
@@ -146,17 +187,18 @@ export default function Nav() {
 
         {open && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             className="lg:hidden mx-auto max-w-6xl px-5 mt-2"
           >
-            <div className="rounded-2xl p-4 flex flex-col gap-3 text-steel bg-[#101015] border border-white/10 shadow-2xl">
+            <div className="rounded-2xl p-2 flex flex-col text-steel bg-[#101015] border border-white/10 shadow-2xl">
               {linkDefs.map((l) => (
                 <a
                   key={l.href}
                   href={`${base}${l.href}`}
                   onClick={() => setOpen(false)}
-                  className="hover:text-white transition-colors"
+                  className="flex items-center min-h-[44px] px-3 rounded-xl hover:text-white hover:bg-white/5 transition-colors"
                 >
                   {c.ui.nav[l.key]}
                 </a>

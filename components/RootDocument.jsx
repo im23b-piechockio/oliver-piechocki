@@ -4,8 +4,8 @@ import { content } from "../lib/content";
 import { AgentationProvider } from "./AgentationProvider";
 import { LanguageProvider } from "../lib/LanguageProvider";
 import Intro from "./Intro";
-import CustomCursor from "./CustomCursor";
 import ScrollToTop from "./ScrollToTop";
+import SkipLink from "./SkipLink";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -101,10 +101,10 @@ export default function RootDocument({ lang, children }) {
       </head>
       <body>
         <LanguageProvider lang={lang}>
+          <SkipLink />
           <Intro />
-          <CustomCursor />
-          <ScrollToTop />
           {children}
+          <ScrollToTop />
         </LanguageProvider>
         <Analytics />
         <SpeedInsights />

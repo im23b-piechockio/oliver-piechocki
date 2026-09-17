@@ -24,27 +24,42 @@ const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT;
 export default function Contact() {
   const { profile, ui } = useContent();
   const t = ui.contactUi;
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  // status: idle | sending | success | error | mailto
+  const [form, setForm] = useState({ name: "", email: "", message: "", gotcha: "" });
+  // status: idle | sending | success | error
   const [status, setStatus] = useState("idle");
+  const [copied, setCopied] = useState(false);
 
-  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  // Typing again clears a previous success message, so "sent" never sits next to an unsent draft.
+  const update = (k) => (e) => {
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+    if (status === "success") setStatus("idle");
+  };
 
-  const openMailto = () => {
-    const subject = encodeURIComponent(`Portfolio contact, ${form.name}`);
-    const body = encodeURIComponent(
-      `${form.message}\n\n${form.name}\n${form.email}`
-    );
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+  const copyMessage = async () => {
+    try {
+      await navigator.clipboard.writeText(`${form.message}\n\n${form.name}\n${form.email}`);
+      setCopied(true);
+    } catch {
+      // Clipboard API blocked (locked-down work PCs): select the message and use the
+      // legacy copy command, so it is at least highlighted for Ctrl+C.
+      const field = document.querySelector('#contact textarea[name="message"]');
+      field?.focus();
+      field?.select();
+      let ok = false;
+      try {
+        ok = document.execCommand("copy");
+      } catch {}
+      setCopied(ok);
+    }
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setCopied(false);
 
-    // No backend endpoint configured yet -> open the user's mail app.
+    // Without a configured endpoint nothing can be sent: say so instead of pretending.
     if (!FORMSPREE_ENDPOINT) {
-      openMailto();
-      setStatus("mailto");
+      setStatus("error");
       return;
     }
 
@@ -54,7 +69,9 @@ export default function Contact() {
       fd.append("name", form.name);
       fd.append("email", form.email);
       fd.append("message", form.message);
-      fd.append("_subject", `Portfolio contact — ${form.name}`);
+      fd.append("_subject", `Portfolio contact: ${form.name}`);
+      // Formspree honeypot: bots fill every field, people never see this one.
+      fd.append("_gotcha", form.gotcha);
       const res = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         headers: { Accept: "application/json" },
@@ -62,16 +79,12 @@ export default function Contact() {
       });
       if (res.ok) {
         setStatus("success");
-        setForm({ name: "", email: "", message: "" });
+        setForm({ name: "", email: "", message: "", gotcha: "" });
       } else {
-        // Backend reachable but rejected -> fall back to mail app.
-        openMailto();
-        setStatus("mailto");
+        setStatus("error"); // keep the text so it can be copied
       }
     } catch {
-      // Network/CORS failure -> fall back to mail app so it's never a dead end.
-      openMailto();
-      setStatus("mailto");
+      setStatus("error");
     }
   };
 
@@ -142,10 +155,22 @@ export default function Contact() {
               onSubmit={onSubmit}
               className="glass rounded-2xl p-7 space-y-5"
             >
+              <input
+                type="text"
+                name="_gotcha"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={form.gotcha}
+                onChange={update("gotcha")}
+                className="hidden"
+              />
               <div className="grid sm:grid-cols-2 gap-5">
                 <Field label={t.name}>
                   <input
                     required
+                    name="name"
+                    autoComplete="name"
                     value={form.name}
                     onChange={update("name")}
                     placeholder={t.namePh}
@@ -156,6 +181,8 @@ export default function Contact() {
                   <input
                     required
                     type="email"
+                    name="email"
+                    autoComplete="email"
                     value={form.email}
                     onChange={update("email")}
                     placeholder={t.emailPh}
@@ -166,6 +193,7 @@ export default function Contact() {
               <Field label={t.message}>
                 <textarea
                   required
+                  name="message"
                   rows={5}
                   value={form.message}
                   onChange={update("message")}
@@ -183,26 +211,42 @@ export default function Contact() {
                   {status === "sending" ? t.sending : t.send}
                   <Icon name="arrow" className="w-4 h-4" />
                 </motion.button>
-                {(status === "success" || status === "mailto") && (
+                {status === "success" && (
                   <motion.span
+                    role="status"
                     initial={{ opacity: 0, x: -6 }}
                     animate={{ opacity: 1, x: 0 }}
                     className="inline-flex items-center gap-1.5 text-sm text-emerald-400"
                   >
                     <Icon name="check" className="w-4 h-4" />
-                    {status === "mailto" ? t.sent : t.success}
-                  </motion.span>
-                )}
-                {status === "error" && (
-                  <motion.span
-                    initial={{ opacity: 0, x: -6 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="text-sm text-red-400"
-                  >
-                    {t.error}
+                    {t.success}
                   </motion.span>
                 )}
               </div>
+              {status === "error" && (
+                <motion.div
+                  role="alert"
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-red-400/30 bg-red-400/[0.06] p-4 text-sm"
+                >
+                  <p className="text-red-300 font-medium">{t.errorTitle}</p>
+                  <p className="mt-1 text-silver">
+                    {t.errorBody}{" "}
+                    <a href={`mailto:${profile.email}`} className="text-white underline underline-offset-2 break-all">
+                      {profile.email}
+                    </a>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={copyMessage}
+                    className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 min-h-[44px] text-silver hover:text-white hover:border-white/30 transition-colors"
+                  >
+                    {copied && <Icon name="check" className="w-4 h-4 text-emerald-400" />}
+                    {copied ? t.copied : t.copy}
+                  </button>
+                </motion.div>
+              )}
             </form>
           </Reveal>
         </div>

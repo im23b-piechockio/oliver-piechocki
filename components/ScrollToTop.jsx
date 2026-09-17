@@ -17,6 +17,9 @@ export default function ScrollToTop() {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Back to top"
+      // Invisible until scrolled down: keep it out of the tab order and screen readers meanwhile.
+      tabIndex={show ? 0 : -1}
+      aria-hidden={!show}
       style={{
         bottom: "calc(1.5rem + env(safe-area-inset-bottom))",
         right: "calc(1.5rem + env(safe-area-inset-right))",

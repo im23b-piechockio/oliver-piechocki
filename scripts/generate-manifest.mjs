@@ -59,21 +59,20 @@ async function processCertificates() {
     let preview = null;
     if (IMAGE_EXT.has(ext)) {
       preview = `/certificates/${file}`;
-    } else if (sharp && ext === ".pdf") {
-      // sharp can rasterize PDFs when built against a libvips with PDF support.
+    } else {
+      // Committed page-1 renders from `npm run previews` (content/certificates/previews).
+      const name = file.replace(/\.pdf$/i, ".jpg");
       try {
-        const name = file.replace(/\.pdf$/i, "") + ".png";
-        await sharp(path.join(CERT_SRC, file), { page: 0, density: 150 })
-          .resize(800, null, { withoutEnlargement: true })
-          .png()
-          .toFile(path.join(PUB_CERT, name));
-        preview = `/certificates/${name}`;
+        await ensureDir(path.join(PUB_CERT, "previews"));
+        await fs.copyFile(path.join(CERT_SRC, "previews", name), path.join(PUB_CERT, "previews", name));
+        preview = `/certificates/previews/${name}`;
       } catch {
-        preview = null; // fall back to a styled card in the UI
+        preview = null; // no preview yet: the UI falls back to a styled card
       }
     }
 
     out.push({
+      name: file,
       title: prettify(file),
       file: `/certificates/${file}`,
       preview,
