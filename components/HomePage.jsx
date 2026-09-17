@@ -22,7 +22,9 @@ async function getManifest() {
 
 export default async function HomePage() {
   const manifest = await getManifest();
-  const portrait = manifest.photos?.[0]?.file || null;
+  const images = manifest.images || {};
+  const portraitPath = manifest.photos?.[0]?.file;
+  const portrait = portraitPath ? images[portraitPath] || { src: portraitPath } : null;
 
   return (
     <main className="relative">
@@ -31,7 +33,7 @@ export default async function HomePage() {
       <Hero portrait={portrait} />
       <About />
       <Knowledge />
-      <Projects />
+      <Projects images={images} />
       <Certificates certificates={manifest.certificates || []} />
       <Skills />
       <Timeline />

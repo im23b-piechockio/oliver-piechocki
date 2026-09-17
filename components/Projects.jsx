@@ -5,17 +5,18 @@ import { SectionHeader } from "./Section";
 import { Stagger, itemVariants } from "./Reveal";
 import { Icon } from "./Icons";
 import { useContent } from "../lib/LanguageProvider";
+import ResponsiveImage from "./ResponsiveImage";
 
-function ProjectCard({ p }) {
+function ProjectCard({ p, image }) {
   const { ui } = useContent();
   const inner = (
     <>
       <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-panel to-ink">
         {p.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={p.image}
+          <ResponsiveImage
+            image={image || { src: p.image }}
             alt={p.title}
+            sizes="(min-width: 640px) 440px, calc(100vw - 40px)"
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
         ) : (
@@ -93,7 +94,7 @@ function ProjectCard({ p }) {
   );
 }
 
-export default function Projects() {
+export default function Projects({ images = {} }) {
   const { projects, ui } = useContent();
   return (
     <section id="projects" className="relative py-20 md:py-28 px-5">
@@ -105,7 +106,7 @@ export default function Projects() {
         />
         <Stagger className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
           {projects.map((p) => (
-            <ProjectCard key={p.title} p={p} />
+            <ProjectCard key={p.title} p={p} image={images[p.image]} />
           ))}
         </Stagger>
       </div>

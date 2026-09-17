@@ -31,7 +31,7 @@ async function listFiles(dir) {
   }
 }
 
-// Optional sharp — used to make optimized photo previews. Never fatal.
+// Optional sharp, used for responsive image variants. Never fatal.
 let sharp = null;
 try {
   sharp = (await import("sharp")).default;
@@ -82,54 +82,54 @@ async function processCertificates() {
   return out;
 }
 
-async function processPhotos() {
-  await ensureDir(PUB_PHOTO);
-  const files = await listFiles(PHOTO_SRC);
-  const out = [];
-  for (const file of files) {
-    const ext = path.extname(file).toLowerCase();
-    if (!IMAGE_EXT.has(ext)) continue;
-    const dest = path.join(PUB_PHOTO, file);
-    if (sharp) {
-      try {
-        await sharp(path.join(PHOTO_SRC, file))
-          .resize(1200, 1200, { fit: "inside", withoutEnlargement: true })
-          .toFile(dest);
-      } catch {
-        await fs.copyFile(path.join(PHOTO_SRC, file), dest);
-      }
-    } else {
-      await fs.copyFile(path.join(PHOTO_SRC, file), dest);
-    }
-    out.push({ file: `/photos/${file}`, title: prettify(file) });
-  }
-  return out;
-}
+// Responsive variants: every source image becomes AVIF, WebP and JPEG in a few
+// widths. The site picks them via <picture>/srcset (components/ResponsiveImage),
+// so phones download small files and only the portrait loads right away.
+const FORMATS = [
+  ["avif", (img) => img.avif({ quality: 55 })],
+  ["webp", (img) => img.webp({ quality: 75 })],
+  ["jpg", (img) => img.jpeg({ quality: 80, mozjpeg: true })],
+];
 
-// Optimize project screenshots. Referenced by path in lib/content.js
-// (e.g. image: "/projects/mensa.jpg"), so we just copy/optimize by filename.
-async function processProjects() {
-  await ensureDir(PUB_PROJECT);
-  const files = await listFiles(PROJECT_SRC);
-  const out = [];
+async function processImageSet(srcDir, pubDir, urlBase, widths) {
+  await ensureDir(pubDir);
+  const files = await listFiles(srcDir);
+  const images = {};
   for (const file of files) {
     const ext = path.extname(file).toLowerCase();
     if (!IMAGE_EXT.has(ext)) continue;
-    const dest = path.join(PUB_PROJECT, file);
-    if (sharp) {
-      try {
-        await sharp(path.join(PROJECT_SRC, file))
-          .resize(1400, 1400, { fit: "inside", withoutEnlargement: true })
-          .toFile(dest);
-      } catch {
-        await fs.copyFile(path.join(PROJECT_SRC, file), dest);
-      }
-    } else {
-      await fs.copyFile(path.join(PROJECT_SRC, file), dest);
+    const src = path.join(srcDir, file);
+    const key = `${urlBase}/${file}`;
+
+    if (!sharp) {
+      await fs.copyFile(src, path.join(pubDir, file));
+      images[key] = { src: key };
+      continue;
     }
-    out.push(`/projects/${file}`);
+
+    const meta = await sharp(src).metadata();
+    const largest = Math.min(meta.width, widths[widths.length - 1]);
+    const steps = [...new Set([...widths.filter((w) => w < largest), largest])];
+    const base = file.replace(/\.[^.]+$/, "");
+    const entry = { width: steps[steps.length - 1], height: 0 };
+
+    for (const [fmt, encode] of FORMATS) {
+      const srcset = [];
+      for (const w of steps) {
+        const name = `${base}-${w}.${fmt}`;
+        const info = await encode(sharp(src).resize(w)).toFile(path.join(pubDir, name));
+        if (w === entry.width) entry.height = info.height;
+        srcset.push(`${urlBase}/${name} ${w}w`);
+      }
+      entry[fmt] = srcset.join(", ");
+    }
+    entry.src = `${urlBase}/${base}-${entry.width}.jpg`;
+
+    // Keep the original filename available too (used by the link preview image).
+    await sharp(src).resize(entry.width).jpeg({ quality: 82 }).toFile(path.join(pubDir, file));
+    images[key] = entry;
   }
-  return out;
+  return images;
 }
 
 async function main() {
@@ -138,21 +138,22 @@ async function main() {
   await ensureDir(PHOTO_SRC);
   await ensureDir(PROJECT_SRC);
 
-  const [certificates, photos, projectImages] = await Promise.all([
+  const [certificates, photoImages, projectImages] = await Promise.all([
     processCertificates(),
-    processPhotos(),
-    processProjects(),
+    processImageSet(PHOTO_SRC, PUB_PHOTO, "/photos", [400, 800]),
+    processImageSet(PROJECT_SRC, PUB_PROJECT, "/projects", [480, 960, 1400]),
   ]);
+  const photos = Object.keys(photoImages).map((file) => ({ file, title: prettify(path.basename(file)) }));
 
   const manifest = {
     generatedAt: new Date().toISOString(),
     certificates,
     photos,
-    projectImages,
+    images: { ...photoImages, ...projectImages },
   };
   await fs.writeFile(MANIFEST, JSON.stringify(manifest, null, 2));
   console.log(
-    `[assets] ${certificates.length} certificate(s), ${photos.length} photo(s), ${projectImages.length} project image(s) -> public/manifest.json`
+    `[assets] ${certificates.length} certificate(s), ${photos.length} photo(s), ${Object.keys(projectImages).length} project image(s) -> public/manifest.json`
   );
 }
 

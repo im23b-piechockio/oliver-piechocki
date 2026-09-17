@@ -4,6 +4,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import { useRef } from "react";
 import { useContent } from "../lib/LanguageProvider";
 import { Icon } from "./Icons";
+import ResponsiveImage from "./ResponsiveImage";
 
 export default function Hero({ portrait }) {
   const c = useContent();
@@ -132,10 +133,11 @@ export default function Hero({ portrait }) {
         >
           <div className="relative aspect-[4/5] rounded-3xl overflow-hidden glass card-glow">
             {portrait ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={portrait}
+              <ResponsiveImage
+                image={portrait}
                 alt={profile.name}
+                sizes="(min-width: 1024px) 384px, (min-width: 640px) 384px, calc(100vw - 40px)"
+                priority
                 className="w-full h-full object-cover"
               />
             ) : (
