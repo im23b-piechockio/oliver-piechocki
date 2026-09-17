@@ -1,11 +1,15 @@
 # Certificates & Diplomas
 
-Drop your **PDF** files (or images) into this folder.
+Drop **PDF** files (or images) into this folder. On the next `npm run dev` or
+`npm run build` they are copied into the site and shown in the Certificates
+section.
 
-On the next `npm run dev` or `npm run build` they are automatically copied into
-the site and shown in the **Certificates** section — no code changes needed.
+For a nice card:
 
-- PDFs get a "View PDF" card (a preview image is generated if your `sharp`
-  build supports PDF rasterization; otherwise an elegant fallback card is shown).
-- The filename becomes the card title, so name files nicely, e.g.
-  `Cisco-Networking-Basics.pdf` -> "Cisco Networking Basics".
+1. Run `npm run previews` to render page 1 of each PDF into `previews/`
+   (commit those images). Sideways scans can be rotated in
+   `scripts/certificate-previews.mjs` (`ROTATE`).
+2. Add the file under `certificates` in `lib/content.js` (both languages) with
+   title, issuer, date and level. Listed certificates are shown in that order.
+
+Files without an entry still appear, titled after their filename.

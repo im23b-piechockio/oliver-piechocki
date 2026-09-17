@@ -1,9 +1,7 @@
 # Photos of me
 
-Drop your **images** (`.jpg`, `.png`, `.webp`) into this folder.
+Drop **images** (`.jpg`, `.png`, `.webp`) into this folder.
 
-On the next `npm run dev` / `npm run build` they are optimized (resized for the
-web via `sharp` when available) and become available to the site.
-
-The **first** photo dropped here is automatically used as the hero / about
-portrait, replacing the placeholder.
+On the next `npm run dev` / `npm run build` they are converted into AVIF, WebP
+and JPEG in several widths. The **first** photo is used as the portrait in the
+hero and in the link preview image.

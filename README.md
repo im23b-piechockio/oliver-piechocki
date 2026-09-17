@@ -1,7 +1,13 @@
-# Oliver Piechocki — Portfolio
+# Oliver Piechocki · Portfolio
 
-A single-page, animated portfolio built with **Next.js 14**, **React** and
-**Framer Motion**. Dark, minimal design in black / silver / grey / white.
+Personal portfolio of an IMS graduate (Federal Vocational Baccalaureate in
+Business), looking for the internship year in application development from
+summer 2027.
+
+Live: [oliver-piechocki.vercel.app](https://oliver-piechocki.vercel.app) (German) ·
+[/en](https://oliver-piechocki.vercel.app/en) (English)
+
+Built with **Next.js 15**, **React** and **Framer Motion**. Dark, minimal design.
 
 ## Run it
 
@@ -17,41 +23,48 @@ npm run build
 npm start
 ```
 
-## Editing content
+## Structure
 
-All text lives in one file: [`lib/content.js`](lib/content.js) — name, summary,
-skills, timeline, interests, **email and phone number**.
+- `app/(de)/` serves German at `/`, `app/(en)/en/` serves English at `/en`.
+  Each has its own root layout, so language, title and link preview come from
+  the server.
+- [`components/HomePage.jsx`](components/HomePage.jsx) assembles the sections:
+  Hero, About, Skills, Projects, Certificates, Strengths, Journey, Contact.
+- [`lib/content.js`](lib/content.js) holds **all text in both languages**:
+  profile, skills, projects, certificates, timeline, contact details.
+- [`lib/og.jsx`](lib/og.jsx) renders the link preview image at build time.
 
-> The phone number is a placeholder (`+41 00 000 00 00`). Update it in
-> `lib/content.js`.
+## Adding images & certificates
 
-## Adding photos & certificates (automatic)
+Drop files into these folders; the build-time pipeline
+([`scripts/generate-manifest.mjs`](scripts/generate-manifest.mjs)) picks them up
+on every `npm run dev` / `npm run build`:
 
-Just drop files into these folders and rebuild — they are picked up
-automatically by the build-time asset pipeline
-([`scripts/generate-manifest.mjs`](scripts/generate-manifest.mjs)):
+- `content/photos/`: the first photo becomes the portrait.
+- `content/projects/`: screenshots, referenced by the `image` field of each
+  project in `lib/content.js`.
+- `content/certificates/`: PDFs, shown as cards.
 
-- `content/photos/` — images (`.jpg`, `.png`, `.webp`). The **first** photo
-  becomes the hero portrait. Images are web-optimized via `sharp`.
-- `content/certificates/` — PDFs (or images). Each becomes a clickable card in
-  the Certificates section. A preview image is generated when your `sharp`
-  build supports PDF rasterization; otherwise a clean document card is shown.
+Photos and screenshots are turned into AVIF, WebP and JPEG in several widths.
 
-No code changes needed — the folders are scanned on every `npm run dev` /
-`npm run build`.
+For a **new certificate**:
 
-## Testing
+1. Put the PDF into `content/certificates/`.
+2. Run `npm run previews` to render its first page as a preview image
+   (needs Playwright's Chromium once: `npx playwright install chromium`).
+3. Add title, issuer, date and level for both languages under `certificates`
+   in `lib/content.js`.
 
-The site is validated with Playwright:
+## Contact form
+
+Messages are sent via Formspree. Set the endpoint in `.env.local`:
 
 ```bash
-npm start                     # in one terminal (port 3111 used by scripts)
-node scripts/validate.mjs     # content + console-error checks, screenshots
+NEXT_PUBLIC_FORMSPREE_ENDPOINT=https://formspree.io/f/...
 ```
 
-## Sections
+Without it, the form shows an error with the email address instead of sending.
 
-Hero → About → Skills → Journey → Certificates → Contact (form + call/email
-links) → Footer, with scroll-progress bar and reveal-on-scroll animations.
+## Deployment
 
-_Auto-deploy test: connected to GitHub via Vercel._
+Pushed to `main`, deployed automatically by Vercel.
