@@ -7,7 +7,6 @@ to `/public/projects/`, then referenced by filename in `lib/content.js`
 Expected filenames (match the `image:` paths in lib/content.js):
 
 - `mensa.jpg`      -> Mensa App
-- `creatine.jpg`   -> Creatine Info Page
 - `enerlytics.jpg` -> Enerlytics
 
 `.png` / `.webp` also work — if you use a different extension, update the

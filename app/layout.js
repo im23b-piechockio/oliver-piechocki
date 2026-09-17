@@ -21,7 +21,7 @@ export const metadata = {
     "IMS Absolvent",
     "Praktikum 2027",
     "Berufsmaturität Wirtschaft",
-    "Business Analyse",
+    "Applikationsentwicklung",
     "Portfolio",
     "KSH Hottingen",
     "Zürich",

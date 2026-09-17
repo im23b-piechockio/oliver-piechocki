@@ -6,6 +6,7 @@ import { useContent, useLang } from "../lib/LanguageProvider";
 
 const linkDefs = [
   { href: "#about", key: "about" },
+  { href: "#knowledge", key: "knowledge" },
   { href: "#projects", key: "projects" },
   { href: "#certificates", key: "certificates" },
   { href: "#skills", key: "skills" },
@@ -92,7 +93,7 @@ export default function Nav() {
             {c.profile.firstName}
             <span className="text-steel">.</span>
           </a>
-          <div className="hidden md:flex items-center gap-7 text-sm text-steel">
+          <div className="hidden lg:flex items-center gap-7 text-sm text-steel">
             {linkDefs.map((l) => {
               const isActive = active === l.href.slice(1);
               return (
@@ -115,7 +116,7 @@ export default function Nav() {
               );
             })}
           </div>
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <LangToggle />
             <a
               href="/#contact"
@@ -124,7 +125,7 @@ export default function Nav() {
               {c.ui.getInTouch}
             </a>
           </div>
-          <div className="md:hidden flex items-center gap-3">
+          <div className="lg:hidden flex items-center gap-3">
             <LangToggle />
             <button
               className="text-steel hover:text-white w-11 h-11 flex items-center justify-center -mr-2"
@@ -144,7 +145,7 @@ export default function Nav() {
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="md:hidden mx-auto max-w-6xl px-5 mt-2"
+            className="lg:hidden mx-auto max-w-6xl px-5 mt-2"
           >
             <div className="rounded-2xl p-4 flex flex-col gap-3 text-steel bg-[#101015] border border-white/10 shadow-2xl">
               {linkDefs.map((l) => (

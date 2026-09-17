@@ -3,6 +3,7 @@ import path from "node:path";
 import Nav from "../components/Nav";
 import Hero from "../components/Hero";
 import About from "../components/About";
+import Knowledge from "../components/Knowledge";
 import Skills from "../components/Skills";
 import Timeline from "../components/Timeline";
 import Projects from "../components/Projects";
@@ -28,6 +29,7 @@ export default async function Home() {
       <Nav />
       <Hero portrait={portrait} />
       <About />
+      <Knowledge />
       <Projects />
       <Certificates certificates={manifest.certificates || []} />
       <Skills />
