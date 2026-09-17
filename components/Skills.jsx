@@ -16,7 +16,7 @@ export default function Skills() {
           title={ui.sections.skills.title}
           sub={ui.sections.skills.sub}
         />
-        <Stagger className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <Stagger className="grid sm:grid-cols-2 gap-5">
           {skills.map((s) => (
             <motion.div
               key={s.title}
